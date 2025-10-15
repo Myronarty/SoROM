@@ -215,6 +215,18 @@ Number::Number(Number&&) = default;
 
 Number& Number:: operator=(const Number&) = default;
 
+bool Number:: operator==(const Number& B) const
+{
+	if (this->LongCmp(B) == 0)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 Number Number::operator+(const Number& B)
 {
 	Number C("0");

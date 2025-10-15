@@ -33,6 +33,7 @@ public:
 	Number squared(const Number& B);
 	Number power(const Number& B);
 	Number& operator=(const Number&);
+	bool operator==(const Number& B) const;
 	Number operator+ (const Number& B);
 	Number operator+ (const uint32_t& k);
 	Number operator- (const Number& B);
