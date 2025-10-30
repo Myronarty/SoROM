@@ -1,24 +1,24 @@
 #pragma once
 #include "Numb.h"
 
-bool Number::HexSyntax(string n)
+bool DoubleNumber::HexSyntax(string n)
 {
 	regex hex("^[A-F0-9]+$");
 	return regex_match(n, hex);
 }
 
-Number::Number(string s)
+DoubleNumber::DoubleNumber(string s)
 {
 	int n = s.size();
-	if (n > 512)
+	if (n > 1032)
 	{
-		cout << "Too big number" << endl;
+		cout << "Too big DoubleNumber" << endl;
 		return;
 	}
 
 	if (HexSyntax(s) == 0)
 	{
-		cout << "Strange number" << endl;
+		cout << "Strange DoubleNumber" << endl;
 		return;
 	}
 
@@ -48,7 +48,7 @@ Number::Number(string s)
 	s.clear();
 }
 
-int Number::High() const
+int DoubleNumber::High() const
 {
 	for (int i = b - 1; i > -1; i--)
 	{
@@ -60,7 +60,7 @@ int Number::High() const
 	return -1;
 }
 
-int Number::HighB() const
+int DoubleNumber::HighB() const
 {
 	for (int i = b - 1; i > -1; i--)
 	{
@@ -70,7 +70,7 @@ int Number::HighB() const
 			{
 				if (A[i] & (1u << j))
 				{
-					return i*32 + j;
+					return i * 32 + j;
 				}
 			}
 		}
@@ -78,7 +78,7 @@ int Number::HighB() const
 	return -1;
 }
 
-void Number::Show() const
+void DoubleNumber::Show() const
 {
 	for (int i = 0; i < b; i++)
 	{
@@ -87,7 +87,7 @@ void Number::Show() const
 	cout << endl;
 }
 
-void Number::ShowHex() const //maybe do better
+void DoubleNumber::ShowHex() const //maybe do better
 {
 	cout << endl;
 	char Ch[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
@@ -104,7 +104,7 @@ void Number::ShowHex() const //maybe do better
 	}*/
 	if (k >= 0)
 	{
-		for (int i = k ; i > -1; i--)
+		for (int i = k; i > -1; i--)
 		{
 			//cout << " ";
 			uint32_t temp = A[i];
@@ -119,7 +119,7 @@ void Number::ShowHex() const //maybe do better
 	cout << endl;
 }
 
-int Number::LongCmp(Number B) const
+int DoubleNumber::LongCmp(DoubleNumber B) const
 {
 	int i = b - 1;
 	while (A[i] == B.A[i])
@@ -134,17 +134,17 @@ int Number::LongCmp(Number B) const
 	{
 		return 1;
 	}
-	else 
+	else
 	{
 		return -1;
 	}
 }
 
-void Number::LSDTH(int k)
+void DoubleNumber::LSDTH(int k)
 {
 	if (b < k)
 	{
-		for(int i = 0; i < b; i++)
+		for (int i = 0; i < b; i++)
 		{
 			A[i] = 0;
 		}
@@ -155,7 +155,7 @@ void Number::LSDTH(int k)
 		cout << "error";
 		return;
 	}
-	for (int i = b-1; i >= k; i--)
+	for (int i = b - 1; i >= k; i--)
 	{
 		A[i] = A[i - k];
 	}
@@ -166,7 +166,7 @@ void Number::LSDTH(int k)
 	return;
 }
 
-void Number::RSDTH(int k)
+void DoubleNumber::RSDTH(int k)
 {
 	if (b <= k)
 	{
@@ -189,11 +189,11 @@ void Number::RSDTH(int k)
 	return;
 }
 
-void Number::LSBTH(int k)
+void DoubleNumber::LSBTH(int k)
 {
 	int a = this->High();
-	Number Temp;
-	if (b*w < k)
+	DoubleNumber Temp;
+	if (b * w < k)
 	{
 		for (int i = 0; i < b; i++)
 		{
@@ -232,13 +232,13 @@ void Number::LSBTH(int k)
 	return;
 }
 
-Number::Number(const Number&) = default;
+DoubleNumber::DoubleNumber(const DoubleNumber&) = default;
 
-Number::Number(Number&&) = default;
+DoubleNumber::DoubleNumber(DoubleNumber&&) = default;
 
-Number& Number:: operator=(const Number&) = default;
+DoubleNumber& DoubleNumber:: operator=(const DoubleNumber&) = default;
 
-bool Number:: operator==(const Number& B) const
+bool DoubleNumber:: operator==(const DoubleNumber& B) const
 {
 	if (this->LongCmp(B) == 0)
 	{
@@ -250,13 +250,14 @@ bool Number:: operator==(const Number& B) const
 	}
 }
 
-Number Number::operator+(const Number& B)
+DoubleNumber DoubleNumber::operator+(const DoubleNumber& B)
 {
-	Number C("0");
+	DoubleNumber C("0");
 	uint64_t carry = 0;
 	for (int i = 0; i < b; i++)
 	{
 		uint64_t temp = uint64_t(this->A[i]) + uint64_t(B.A[i]) + carry;
+		//cout << temp << endl;
 		C.A[i] = temp & ((uint32_t)-1);
 		carry = temp >> w;
 	}
@@ -264,9 +265,9 @@ Number Number::operator+(const Number& B)
 	return C;
 }
 
-Number Number::operator+(const uint32_t& k)
+DoubleNumber DoubleNumber::operator+(const uint32_t& k)
 {
-	Number C;
+	DoubleNumber C;
 	uint64_t carry = 0;
 	uint64_t temp = uint64_t(this->A[0]) + uint64_t(k);
 	C.A[0] = temp & ((uint32_t)-1);
@@ -275,7 +276,7 @@ Number Number::operator+(const uint32_t& k)
 	{
 		if (carry == 0)
 		{
-			for (int j = i; j < Number::b; j++)
+			for (int j = i; j < DoubleNumber::b; j++)
 			{
 				C.A[j] = this->A[j];
 			}
@@ -289,12 +290,12 @@ Number Number::operator+(const uint32_t& k)
 	return C;
 }
 
-Number Number::operator-(const Number& B)
+DoubleNumber DoubleNumber::operator-(const DoubleNumber& B)
 {
-	Number C;
+	DoubleNumber C;
 	if (this->LongCmp(B) == -1)
 	{
-		Number Temp("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+		DoubleNumber Temp("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
 		int64_t borrow = 0;
 		for (int i = 0; i < b; i++)
 		{
@@ -334,21 +335,21 @@ Number Number::operator-(const Number& B)
 	return C;
 }
 
-Number Number::operator* (const Number& B)
+DoubleNumber DoubleNumber::operator* (const DoubleNumber& B)
 {
-	Number C;
+	DoubleNumber C;
 	for (int i = 0; i < b; i++)
 	{
-		Number Temp = this->LMOG(B.A[i]);
+		DoubleNumber Temp = this->LMOG(B.A[i]);
 		Temp.LSDTH(i);
 		C = C + Temp;
 	}
 	return C;
 }
 
-Number Number::LMOG(uint32_t  k) const
+DoubleNumber DoubleNumber::LMOG(uint32_t  k) const
 {
-	Number C;
+	DoubleNumber C;
 	uint32_t carry = 0;
 	for (int i = 0; i < b; i++)
 	{
@@ -360,25 +361,25 @@ Number Number::LMOG(uint32_t  k) const
 	return C;
 }
 
-Number Number::operator/ (const Number& B)
+DoubleNumber DoubleNumber::operator/ (const DoubleNumber& B)
 {
-	Number C;
+	DoubleNumber C;
 	int k = B.HighB();
-	Number R = *this;
-	Number Q;
+	DoubleNumber R = *this;
+	DoubleNumber Q;
 	while (R.LongCmp(B) != -1)
 	{
 		int t = R.HighB();
 		C = B;
-		C.LSBTH(t-k);
+		C.LSBTH(t - k);
 		if (R.LongCmp(C) == -1)
 		{
 			t--;
 			C = B;
-			C.LSBTH(t-k);
+			C.LSBTH(t - k);
 			//cout << 1;
 		}
-		Number Temp("1");
+		DoubleNumber Temp("1");
 		Temp.LSBTH(t - k);
 		R = R - C;
 		Q = Q + Temp;
@@ -386,85 +387,10 @@ Number Number::operator/ (const Number& B)
 	return Q;
 }
 
-Number Number::squared()
-{
-	Number C;
-
-	for (int i = 0; i < b; i++)
-	{
-		uint64_t carry = 0;
-		for (int j = i + 1; j < b; j++)
-		{
-			uint64_t temp = ((uint64_t)this->A[j] * (uint64_t)this->A[i]);
-			uint64_t temp_2 = temp << 1;
-			if (i + j < 64)
-			{
-				C.A[i + j] += (temp_2 & ((uint32_t)-1)) + carry;
-				carry = uint64_t(uint64_t(C.A[i + j]) + temp_2) >> w;
-			}
-			if ((temp & (uint64_t(1) << 63)) != 0)
-			{
-				carry |= (uint64_t(1) << w);
-			}
-		}
-	}
-
-	for (int i = 0; i < b; i++)
-	{
-		uint64_t temp = (uint64_t)this->A[i] * (uint64_t)this->A[i];
-
-		if (2 * i < 64)
-		{
-			C.A[2 * i] += (uint32_t)temp;
-		}
-		if (2 * i < 63)
-		{
-			C.A[2 * i + 1] += uint32_t(temp >> w);
-		}
-	}
-
-	return C;
-}
-
-Number Number::power(const Number& B)
-{
-	Number C("1");
-	int p[512] = { 0 };
-	int k = High();
-	for (int i = k; i > -1; i--)
-	{
-		uint32_t temp = B.A[i];
-		for (int j = 7; j > -1; j--)
-		{
-			uint32_t t = temp >> (4 * j);
-			p[i * 8 + j] = t;
-			temp = temp & ~(t << (4 * j));
-		}
-	}
-	Number D[16];
-	D[0] = C;
-	D[1] = *this;
-	for (int i = 2; i < 16; i++)
-	{
-		D[i] = D[i - 1] * (*this);
-	}
-	for (int i = 511; i > 0; i--)
-	{
-		C = C * D[p[i]];
-		for (int k = 0; k < 4; k++)
-		{
-			C = C * C;
-		}
-	}
-	C = C * D[p[0]];
-
-	return C;
-}
-
-Number Number::operator<<(int k)
+DoubleNumber DoubleNumber::operator<<(int k)
 {
 	int a = this->High();
-	Number Temp;
+	DoubleNumber Temp;
 
 	if (b * w < k)
 	{
@@ -505,16 +431,16 @@ Number Number::operator<<(int k)
 	return *this;
 }
 
-Number Number::operator>>(int k)
+DoubleNumber DoubleNumber::operator>>(int k)
 {
 	// Отримуємо індекс найстаршого блоку
 	int a = this->High();
-	if (a == -1) 
+	if (a == -1)
 	{
 		return *this;
 	}
 
-	Number Temp; // Тимчасовий об'єкт для збору результату
+	DoubleNumber Temp; // Тимчасовий об'єкт для збору результату
 
 	// 1. Перевірка на від'ємний зсув
 	if (k < 0)
@@ -566,57 +492,53 @@ Number Number::operator>>(int k)
 	return *this;
 }
 
-int* Number::ToBits() const
+DoubleNumber Number::DoubleMult(const Number& B) const
 {
-	int p[512] = { 0 };
-	int k = High();
-	for (int i = k; i > -1; i--)
+	DoubleNumber P;
+
+	for (int i = 0; i < 64; i++)
 	{
-		cout << " ";
-		uint32_t temp = A[i];
-		for (int j = 7; j > -1; j--)
+		if (B.A[i] == 0) continue;
+
+		uint64_t carry = 0;
+		for (int j = 0; j < 64; j++)
 		{
-			uint32_t t = temp >> (4 * j);
-			p[k - i] = t;
-			//cout << p[k - i] << endl;
-			temp = temp & ~(t << (4 * j));
+			uint64_t temp = (uint64_t)this->A[j] * B.A[i] + P.A[i + j] + carry;
+
+			P.A[i + j] = (uint32_t)temp;
+			carry = temp >> 32;
+		}
+
+		int k = i + 64;
+		while (carry > 0 && k < 129)
+		{
+			uint64_t temp = (uint64_t)P.A[k] + carry;
+			P.A[k] = (uint32_t)temp;
+			carry = temp >> 32;
+			k++;
 		}
 	}
-	return p;
+	return P;
 }
 
-string Number::generate_hex(const int len)
+Number DoubleNumber::ToNumber() const
 {
-	static const char hex_chars[] = "0123456789ABCDEF";
-
-	random_device rd;
-	mt19937 gen(rd());
-	uniform_int_distribution<> distrib(0, sizeof(hex_chars) - 2);
-
-	string result;
-	result.reserve(len);
-	for (int i = 0; i < len; ++i) 
+	Number R;
+	for (int i = 0; i < 64; i++) 
 	{
-		result += hex_chars[distrib(gen)];
+		R.A[i] = this->A[i];
 	}
 
-	return result;
+	return R;
 }
 
-void Number::ShiftRight1()
+DoubleNumber Number::ToDoubleNumber() const
 {
-	for (int i = 0; i < b - 1; i++)
+	DoubleNumber R;
+	for (int i = 0; i < 64; i++)
 	{
-		A[i] = (A[i] >> 1) | (A[i + 1] << (w - 1));
+		R.A[i] = this->A[i];
 	}
-	A[b - 1] = A[b - 1] >> 1;
-}
 
-void Number::ShiftLeft1()
-{
-	for (int i = b - 1; i > 0; i--)
-	{
-		A[i] = (A[i] << 1) | (A[i - 1] >> (w - 1));
-	}
-	A[0] = A[0] << 1;
+	return R;
 }
