@@ -1,25 +1,25 @@
 #pragma once
 #include "Numb.h"
+#include <intrin.h>
+#include <iomanip>
 using Clock = std::chrono::steady_clock;
 using std::chrono::microseconds;
 using std::chrono::duration_cast;
 
 int main()
 {
-	Number A("645");
-	Number B("D75F");
-	//Number B("2");
-	Number Test("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
-
-	auto start_time = Clock::now();
-
-	Number C = A.power(B);
-
-	auto end_time = Clock::now();
-
+	Number A("");
+	Number B("");
+	Number N("");
+	Number C = A.GCD(B);
 	C.ShowHex();
-
-	cout << duration_cast<seconds>(end_time - start_time).count();
-
+	Number D = N.SumMod(A, B);
+	D.ShowHex();
+	Number E = N.DifMod(A, B);
+	E.ShowHex();
+	Number F = N.MultMod(A, B);
+	F.ShowHex();
+	Number G = N.LMPB(A, B);
+	G.ShowHex();
 	return 0;
 }
